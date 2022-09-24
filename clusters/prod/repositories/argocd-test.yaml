@@ -1,10 +1,14 @@
-apiVersion: source.toolkit.fluxcd.io/v1beta2
+apiVersion: source.toolkit.fluxcd.io/v1beta1
 kind: GitRepository
 metadata:
   name: argocd-test
   namespace: flux-system
 spec:
-  interval: 30s
+  interval: 1m
+  url: https://github.com/alexandershelega/argocd-test.git
   ref:
     branch: master
-  url: https://github.com/alexandershelega/argocd-test.git
+  verify:
+    mode: head
+    secretRef:
+      name: githib-auth
