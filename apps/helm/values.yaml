@@ -37,7 +37,7 @@ service_public:
 
 replicaCount: 1
 image:
-  repository: nginx
+  repository: harbor.intent.ai/base/nginx
   tag: latest
   pullPolicy: Always
   #imagePullSecrets: container-registry
