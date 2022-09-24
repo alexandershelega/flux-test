@@ -3,7 +3,7 @@ kind: Kustomization
 resources:
   - release.yaml 
 configMapGenerator:
-  - name: podinfo-values
+  - name: nginx-values
     files:
       - values.yaml=/apps/helm/values.yaml
 configurations:
