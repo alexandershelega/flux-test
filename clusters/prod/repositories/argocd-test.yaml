@@ -7,8 +7,6 @@ spec:
   interval: 1m
   url: https://github.com/alexandershelega/argocd-test.git
   ref:
-    branch: master
-  verify:
-    mode: head
+    branch: main
     secretRef:
       name: githib-auth
