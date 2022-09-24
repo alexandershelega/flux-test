@@ -14,7 +14,10 @@ spec:
         name: universal
         namespace: default
       interval: 1m
-  valuesFrom:
-  - chartFileRef:
-      path: ./apps/helm/values.yaml
-      optional: true
+      valuesFiles:
+        - ./apps/helm/values.yaml
+
+#  valuesFrom:
+#  - chartFileRef:
+#      path: ./apps/helm/values.yaml
+#      optional: true
