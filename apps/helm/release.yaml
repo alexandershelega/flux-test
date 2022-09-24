@@ -14,5 +14,6 @@ spec:
         name: universal
         namespace: flux-system
       interval: 1m
-      valuesFiles:
-        - values.yaml
+  valuesFrom:
+    - kind: ConfigMap
+      name: nginx-values
