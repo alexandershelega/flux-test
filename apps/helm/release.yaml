@@ -15,9 +15,4 @@ spec:
         namespace: flux-system
       interval: 1m
       valuesFiles:
-        - ./apps/helm/values.yaml
-
-#  valuesFrom:
-#  - chartFileRef:
-#      path: ./apps/helm/values.yaml
-#      optional: true
+        - values.yaml
