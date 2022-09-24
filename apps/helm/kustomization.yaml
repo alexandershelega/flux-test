@@ -5,6 +5,6 @@ resources:
 configMapGenerator:
   - name: nginx-values
     files:
-      - values.yaml=/apps/helm/values.yaml
+      - values.yaml=./apps/helm/values.yaml
 configurations:
   - kustomizeconfig.yaml
