@@ -5,6 +5,8 @@ metadata:
   namespace: default
 spec:
   interval: 1m
+  suspend: false
+  releaseName: nginx-app-prod
   chart:
     spec:
       chart: main-app
