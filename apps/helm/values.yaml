@@ -1,0 +1,171 @@
+###### Global environments
+
+update_date:
+name: nginx
+namespace: prod
+environment: prod
+
+###### Cluster IP service description
+
+service_internal:
+  ##### set type: none for disable current svc or ClusterIP for enable
+  type: ClusterIP
+  port: ["80"]
+  labels:
+    environment: prod
+  annotations: {}
+    # environment: live
+
+###### LoadBalancer service description
+service_public:
+  ##### set type: none for disable current svc or LoadBalancer for enable
+  type: none
+  port: ["80"]
+  labels:
+    environment: prod
+  annotations: {}
+    # cloud.google.com/load-balancer-type: "Internal"
+  loadBalancerSourceRanges:
+    enabled: true
+    adresses: [ "0.0.0.0/0"]
+  ##### Leave empty to auto alocate#
+  loadBalancerExternalAdresses:
+    adresses:
+
+
+###### Deployment description
+
+replicaCount: 1
+image:
+  repository: nginx
+  tag: latest
+  pullPolicy: Always
+  #imagePullSecrets: container-registry
+  labels:
+    environment: prod
+  annotations:
+    #vault.hashicorp.com/agent-inject: "true"
+    #vault.hashicorp.com/agent-pre-populate-only : "true"
+    #vault.hashicorp.com/agent-inject-secret-envs: "prod/secret-name"
+    #vault.hashicorp.com/role: "secret-name-app-prod"
+    #vault.hashicorp.com/agent-inject-template-envs: |
+    #  {{- with secret "prod/secret-name" -}}
+    #  {{- range $k, $v := .Data.data -}}
+    #  {{ $k }}="{{ $v }}"
+    #  {{ end }}
+    #  {{- end }}
+    # environment: prod
+  strategy:
+    #### default policy RollingUpdate, default values 25%
+    type: RollingUpdate
+    maxSurge: 30%
+    maxUnavailable: 30%
+  ##### application port to expose, value can be empty
+  containerPort: ["80"]
+
+  ##### lifecycle job
+  lifecycle: {}
+  #  postStart:
+  #    exec:
+  #      command:
+  #        - "/bin/sh"
+  #        - "-c"
+  #        - >
+  #          cp -f /etc/resolv.conf /tmp;
+  #          sed -i 's/options\ ndots\:5/options\ ndots:5\ single-request/g' /tmp/resolv.conf;
+  #          awk '{for (i=1;i<=NF;i++) if (!a[$i]++) printf("%s%s",$i,FS)}{printf("\n")}' /tmp/resolv.conf >/tmp/resolv.conf.fixed;
+  #          cp -f /tmp/resolv.conf.fixed /etc/resolv.conf
+  #  preStop:
+  #    exec:
+  #      command: ["/usr/sbin/nginx","-s","quit"]
+
+  ##### run command with arg leave empty to use container entrypoint
+
+  cmd: {}
+  #  - /bin/sh
+  #  - -c
+  #  - |
+  #      echo "Hello"
+  arg: {}
+
+
+  ##### readinessProbe description
+  readinessProbe: {}
+  #  tcpSocket:
+  #    port: 80
+  #  initialDelaySeconds: 5
+  #  periodSeconds: 10
+  ##### livenessProbe description
+  livenessProbe: {}
+  #  httpGet:
+  #    path: /
+  #    port: 80
+  #  initialDelaySeconds: 5
+  #  periodSeconds: 10
+  ##### resource  description
+  resources: {}
+  #  limits:
+  #    cpu: 100m
+  #    memory: 4096Mi
+  #  requests:
+  #    cpu: 100m
+  #    memory: 512Mi
+
+##### affinity description
+  #affinity:
+  #  nodeAffinity:
+  #    requiredDuringSchedulingIgnoredDuringExecution:
+  #      nodeSelectorTerms:
+  #      - matchExpressions:
+  #        - key: "cloud.google.com/gke-nodepool"
+  #          operator: In
+  #          values:
+  #          - "intent-prod-private-np1"
+  #  podAntiAffinity:
+  #    requiredDuringSchedulingIgnoredDuringExecution:
+  #    - labelSelector:
+  #        matchExpressions:
+  #        - key: app
+  #          operator: In
+  #          values:
+  #          - test-app-live
+  #      topologyKey: "kubernetes.io/hostname"
+
+##### tolerations description
+  #tolerations:
+  #- key: "app"
+  #  operator: "Equal"
+  #  value: "main"
+  #  effect: "NoSchedule"
+
+
+  volumeMounts:
+  #  - mountPath: /live/shm
+  #    name: dshm
+
+  volumes:
+  #- name: dshm
+  #  emptyDir:
+  #    medium: Memory
+
+env:
+  example: example
+  example2: example2
+
+autoscaling:
+  enabled: false
+  minReplicas: 3
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+autoscalingCustom:
+  enabled: false
+  minReplicasCustom: 1
+  maxReplicasCustom: 100
+  metrics:
+    - type: Pods
+      pods:
+        metricName: http_requests
+        targetAverageValue: 10
+
