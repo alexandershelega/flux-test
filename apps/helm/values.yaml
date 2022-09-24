@@ -4,9 +4,7 @@ update_date:
 name: nginx
 namespace: prod
 environment: prod
-
 ###### Cluster IP service description
-
 service_internal:
   ##### set type: none for disable current svc or ClusterIP for enable
   type: ClusterIP
@@ -14,8 +12,7 @@ service_internal:
   labels:
     environment: prod
   annotations: {}
-    # environment: live
-
+  # environment: live
 ###### LoadBalancer service description
 service_public:
   ##### set type: none for disable current svc or LoadBalancer for enable
@@ -24,37 +21,34 @@ service_public:
   labels:
     environment: prod
   annotations: {}
-    # cloud.google.com/load-balancer-type: "Internal"
+  # cloud.google.com/load-balancer-type: "Internal"
   loadBalancerSourceRanges:
     enabled: true
-    adresses: [ "0.0.0.0/0"]
+    adresses: ["0.0.0.0/0"]
   ##### Leave empty to auto alocate#
   loadBalancerExternalAdresses:
     adresses:
-
-
 ###### Deployment description
-
 replicaCount: 1
 image:
   repository: harbor.intent.ai/base/nginx
-  tag: latest # {"$imagepolicy": "flux-system:nginx:tag"}
+  tag: 1.26.4 # {"$imagepolicy": "flux-system:nginx:tag"}
   pullPolicy: Always
   #imagePullSecrets: container-registry
   labels:
     environment: prod
   annotations:
-    #vault.hashicorp.com/agent-inject: "true"
-    #vault.hashicorp.com/agent-pre-populate-only : "true"
-    #vault.hashicorp.com/agent-inject-secret-envs: "prod/secret-name"
-    #vault.hashicorp.com/role: "secret-name-app-prod"
-    #vault.hashicorp.com/agent-inject-template-envs: |
-    #  {{- with secret "prod/secret-name" -}}
-    #  {{- range $k, $v := .Data.data -}}
-    #  {{ $k }}="{{ $v }}"
-    #  {{ end }}
-    #  {{- end }}
-    # environment: prod
+  #vault.hashicorp.com/agent-inject: "true"
+  #vault.hashicorp.com/agent-pre-populate-only : "true"
+  #vault.hashicorp.com/agent-inject-secret-envs: "prod/secret-name"
+  #vault.hashicorp.com/role: "secret-name-app-prod"
+  #vault.hashicorp.com/agent-inject-template-envs: |
+  #  {{- with secret "prod/secret-name" -}}
+  #  {{- range $k, $v := .Data.data -}}
+  #  {{ $k }}="{{ $v }}"
+  #  {{ end }}
+  #  {{- end }}
+  # environment: prod
   strategy:
     #### default policy RollingUpdate, default values 25%
     type: RollingUpdate
@@ -62,7 +56,6 @@ image:
     maxUnavailable: 30%
   ##### application port to expose, value can be empty
   containerPort: ["80"]
-
   ##### lifecycle job
   lifecycle: {}
   #  postStart:
@@ -80,15 +73,12 @@ image:
   #      command: ["/usr/sbin/nginx","-s","quit"]
 
   ##### run command with arg leave empty to use container entrypoint
-
   cmd: {}
   #  - /bin/sh
   #  - -c
   #  - |
   #      echo "Hello"
   arg: {}
-
-
   ##### readinessProbe description
   readinessProbe: {}
   #  tcpSocket:
@@ -111,7 +101,7 @@ image:
   #    cpu: 100m
   #    memory: 512Mi
 
-##### affinity description
+  ##### affinity description
   #affinity:
   #  nodeAffinity:
   #    requiredDuringSchedulingIgnoredDuringExecution:
@@ -131,34 +121,28 @@ image:
   #          - test-app-live
   #      topologyKey: "kubernetes.io/hostname"
 
-##### tolerations description
+  ##### tolerations description
   #tolerations:
   #- key: "app"
   #  operator: "Equal"
   #  value: "main"
   #  effect: "NoSchedule"
-
-
   volumeMounts:
   #  - mountPath: /live/shm
   #    name: dshm
-
   volumes:
   #- name: dshm
   #  emptyDir:
   #    medium: Memory
-
 env:
   example: example
   example2: example2
-
 autoscaling:
   enabled: false
   minReplicas: 3
   maxReplicas: 100
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
-
 autoscalingCustom:
   enabled: false
   minReplicasCustom: 1
@@ -168,4 +152,3 @@ autoscalingCustom:
       pods:
         metricName: http_requests
         targetAverageValue: 10
-
