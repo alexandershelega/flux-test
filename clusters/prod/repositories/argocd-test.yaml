@@ -8,5 +8,5 @@ spec:
   url: https://github.com/alexandershelega/argocd-test.git
   ref:
     branch: main
-    secretRef:
-      name: githib-auth
+  secretRef:
+    name: githib-auth
