@@ -38,7 +38,7 @@ service_public:
 replicaCount: 1
 image:
   repository: harbor.intent.ai/base/nginx
-  tag: latest
+  tag: latest # {"$imagepolicy": "flux-system:nginx"}
   pullPolicy: Always
   #imagePullSecrets: container-registry
   labels:
